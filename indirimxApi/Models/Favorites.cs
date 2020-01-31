@@ -8,9 +8,8 @@ namespace indirimxApi.Models
 {
     public class Favorites : BaseEntity
     {
-        public int Id { get; set; }
-        public int ProductId { get; set; }
+        public int id { get; set; }
+        public Products product { get; set; }
 
-       
     }
 }

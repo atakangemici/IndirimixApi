@@ -7,8 +7,8 @@ namespace indirimxApi.Models
 {
     public class BaseEntity
     {
-        public int Id { get; set; }
-        public DateTime CreateDate { get; set; }
-        public bool Deleted { get; set; }
+        public int id { get; set; }
+        public DateTime create_date { get; set; }
+        public bool deleted { get; set; }
     }
 }

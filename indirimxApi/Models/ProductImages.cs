@@ -8,11 +8,9 @@ namespace indirimxApi.Models
 {
     public class ProductImages : BaseEntity
     {
+        public string image { get; set; }
+        public bool is_active { get; set; }
+        public int order { get; set; }
 
-        public int ProductId { get; set; }
-        public string Image { get; set; }   
-        public bool IsConfirm { get; set; }
-        public int Order { get; set; }
-       
     }
 }

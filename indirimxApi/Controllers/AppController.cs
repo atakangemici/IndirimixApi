@@ -9,6 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace indirimxApi.Controllers
 {
@@ -32,16 +33,16 @@ namespace indirimxApi.Controllers
 
             Products productData = new Products
             {
-                Location = Product.Location,
-                Description = Product.Description,
-                Store = Product.Store,
-                Name = Product.Name,
-                Price = Product.Price,
-                Like = Product.Like,
-                IsConfirm = Product.IsConfirm,
-                CreateDate = DateTime.Now,
-                Order = Product.Order,
-                Deleted = Product.Deleted
+                location = Product.location,
+                description = Product.description,
+                store = Product.store,
+                name = Product.name,
+                price = Product.price,
+                like = Product.like,
+                is_active = Product.is_active,
+                create_date = DateTime.Now,
+                order = Product.order,
+                deleted = Product.deleted
             };
 
 
@@ -60,11 +61,10 @@ namespace indirimxApi.Controllers
 
             Comments commentData = new Comments
             {
-                Comment = Comment.Comment,
-                UserId = Comment.UserId,
-                ProductId = Comment.ProductId,
-                CreateDate = DateTime.Now,
-                Deleted = Comment.Deleted
+                comment = Comment.comment,
+                user_id = Comment.user_id,
+                create_date = DateTime.Now,
+                deleted = Comment.deleted
             };
 
             dbContext.Comments.Add(commentData);
@@ -81,9 +81,9 @@ namespace indirimxApi.Controllers
 
             Favorites favoritesData = new Favorites
             {
-                ProductId = Favorite.ProductId,
-                CreateDate = DateTime.Now,
-                Deleted = Favorite.Deleted
+                product = Favorite.product,
+                create_date = DateTime.Now,
+                deleted = Favorite.deleted
             };
 
             dbContext.Favorites.Add(favoritesData);
@@ -94,21 +94,21 @@ namespace indirimxApi.Controllers
 
         [AllowAnonymous]
         [Route("add_user"), HttpPost]
-        public async Task<CustomUsers> AddUser([FromBody]CustomUsers User)
+        public async Task<Users> AddUser([FromBody]Users User)
         {
             if (User == null)
                 return null;
 
-            CustomUsers userData = new CustomUsers
+            Users userData = new Users
             {
-                Username = User.Username,
-                Email = User.Email,
-                Image = User.Image,
-                Role = User.Role,
-                UserSurName = User.UserSurName
+                user_name = User.user_name,
+                email = User.email,
+                image = User.image,
+                role = User.role,
+                user_sure_name = User.user_sure_name
             };
-            userData.Deleted = userData.Deleted;
-            userData.CreateDate = DateTime.Now;
+            userData.deleted = userData.deleted;
+            userData.create_date = DateTime.Now;
 
             dbContext.CustomUsers.Add(userData);
             await dbContext.SaveChangesAsync();
@@ -122,8 +122,10 @@ namespace indirimxApi.Controllers
         {
 
             var products = dbContext.Products
-            .Where(x => x.Deleted != true)
-            .Where(x => x.IsConfirm == true).ToList();
+            .Include(x => x.image)
+            .Include(x => x.comment)
+            .Where(x => x.deleted != true)
+            .Where(x => x.is_active == true).ToList();
 
             return products;
         }
@@ -133,19 +135,22 @@ namespace indirimxApi.Controllers
         public async Task<Products> GetProduct(int id)
         {
             var product = dbContext.Products
-                .Where(x => x.Deleted != true)
-                .Where(x => x.IsConfirm == true).FirstOrDefault();
+                .Include(x => x.image)
+                .Include(x => x.comment)
+                .Where(x => x.deleted != true)
+                .Where(x => x.id == id)
+                .Where(x => x.is_active == true).FirstOrDefault();
 
             return product;
         }
 
         [AllowAnonymous]
         [Route("get_user"), HttpGet]
-        public async Task<CustomUsers> GetUser(string email)
+        public async Task<Users> GetUser(string email)
         {
             var user = dbContext.CustomUsers
-                .Where(x => x.Deleted != true)
-                .Where(x => x.Email == email)
+                .Where(x => x.deleted != true)
+                .Where(x => x.email == email)
                 .FirstOrDefault();
 
             return user;

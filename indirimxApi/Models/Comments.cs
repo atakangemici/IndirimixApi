@@ -7,10 +7,10 @@ using System.Web;
 namespace indirimxApi.Models
 {
     public class Comments : BaseEntity
-    {  
-        public int UserId { get; set; }
-        public int ProductId { get; set; }
-        public string Comment { get; set; }       
+    {
+        public int user_id { get; set; }
+        public string comment { get; set; }
+        public int product_id { get; set; }
 
     }
 }
