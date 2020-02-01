@@ -16,6 +16,7 @@ namespace indirimxApi.Models
         public string location { get; set; }
         public string store { get; set; }
         public int like { get; set; }
+        //public int comment_count { get; set; }
         public string description { get; set; }
         public bool is_active { get; set; }
         public int order { get; set; }

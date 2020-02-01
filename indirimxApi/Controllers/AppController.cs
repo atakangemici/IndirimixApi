@@ -52,19 +52,20 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+        [AllowAnonymous]
         [Route("add_comments"), HttpPost]
-        public async Task<bool> AddComment(Comments Comment)
+        public async Task<bool> AddComment([FromBody]JObject obj)
         {
 
-            if (Comment == null)
+            if (obj == null)
                 return false;
 
             Comments commentData = new Comments
             {
-                comment = Comment.comment,
-                user_id = Comment.user_id,
+                comment = "atakan",
+                user_id = 1,
                 create_date = DateTime.Now,
-                deleted = Comment.deleted
+                deleted = false
             };
 
             dbContext.Comments.Add(commentData);
@@ -90,7 +91,7 @@ namespace indirimxApi.Controllers
             await dbContext.SaveChangesAsync();
 
             return true;
-        }
+        }     
 
         [AllowAnonymous]
         [Route("add_user"), HttpPost]
@@ -142,6 +143,19 @@ namespace indirimxApi.Controllers
                 .Where(x => x.is_active == true).FirstOrDefault();
 
             return product;
+        }
+
+        [AllowAnonymous]
+        [Route("get_comment/{id:int}"), HttpGet]
+        public async Task<ICollection<Comments>> GetComment(int id)
+        {
+            var comments = dbContext.Comments
+                .Where(x => x.deleted != true)
+                .Where(x => x.product_id == id)
+                .ToList();
+
+            return comments;
+
         }
 
         [AllowAnonymous]
