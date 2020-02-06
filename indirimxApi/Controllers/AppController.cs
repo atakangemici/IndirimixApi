@@ -59,9 +59,7 @@ namespace indirimxApi.Controllers
 
             if (obj == null)
                 return false;
-
-            if (obj == null)
-                return false;
+          
 
             Comments commentData = new Comments
             {
