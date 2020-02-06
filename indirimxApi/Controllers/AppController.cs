@@ -60,6 +60,9 @@ namespace indirimxApi.Controllers
             if (obj == null)
                 return false;
 
+            if (obj == null)
+                return false;
+
             Comments commentData = new Comments
             {
                 comment = "atakan",
@@ -91,7 +94,7 @@ namespace indirimxApi.Controllers
             await dbContext.SaveChangesAsync();
 
             return true;
-        }     
+        }
 
         [AllowAnonymous]
         [Route("add_user"), HttpPost]
