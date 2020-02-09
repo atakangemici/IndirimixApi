@@ -9,14 +9,16 @@ namespace indirimxApi.Models
     public class Products : BaseEntity
     {
         public Users user { get; set; }
-        public ProductImages image { get; set; }
+        public Images image { get; set; }
         public Comments comment { get; set; }
+        public Likes like { get; set; }
         public string name { get; set; }
         public double price { get; set; }
         public string location { get; set; }
         public string store { get; set; }
-        public int like { get; set; }
-        //public int comment_count { get; set; }
+        public int likes_count { get; set; }
+        //public int like_count { get; set; }
+        public int comments_count{ get; set; }
         public string description { get; set; }
         public bool is_active { get; set; }
         public int order { get; set; }

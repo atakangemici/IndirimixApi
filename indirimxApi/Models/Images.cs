@@ -6,7 +6,7 @@ using System.Web;
 
 namespace indirimxApi.Models
 {
-    public class ProductImages : BaseEntity
+    public class Images : BaseEntity
     {
         public string image { get; set; }
         public bool is_active { get; set; }

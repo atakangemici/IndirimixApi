@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace indirimxApi.Controllers
 {
-    //[Authorize]
     [Route("api/app")]
     public class AppController : ControllerBase
     {
@@ -24,7 +23,6 @@ namespace indirimxApi.Controllers
             dbContext = context;
         }
 
-        [AllowAnonymous]
         [Route("add_product"), HttpPost]
         public async Task<bool> AddProduct(Products Product)
         {
@@ -38,7 +36,8 @@ namespace indirimxApi.Controllers
                 store = Product.store,
                 name = Product.name,
                 price = Product.price,
-                like = Product.like,
+                likes_count = Product.likes_count,
+                comments_count = Product.comments_count,
                 is_active = Product.is_active,
                 create_date = DateTime.Now,
                 order = Product.order,
@@ -52,7 +51,6 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        [AllowAnonymous]
         [Route("add_comments"), HttpPost]
         public async Task<bool> AddComment([FromBody]JObject obj)
         {
@@ -75,7 +73,6 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        [Route("add_favorites"), HttpPost]
         public async Task<bool> AddFavorite(Favorites Favorite)
         {
             if (Favorite == null)
@@ -94,7 +91,6 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        [AllowAnonymous]
         [Route("add_user"), HttpPost]
         public async Task<Users> AddUser([FromBody]Users User)
         {
@@ -103,22 +99,21 @@ namespace indirimxApi.Controllers
 
             Users userData = new Users
             {
-                user_name = User.user_name,
+                name = User.name,
                 email = User.email,
                 image = User.image,
                 role = User.role,
-                user_sure_name = User.user_sure_name
+                sure_name = User.sure_name
             };
             userData.deleted = userData.deleted;
             userData.create_date = DateTime.Now;
 
-            dbContext.CustomUsers.Add(userData);
+            dbContext.Users.Add(userData);
             await dbContext.SaveChangesAsync();
 
             return userData;
         }
 
-        [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
         public async Task<ICollection<Products>> GetAllProducts()
         {
@@ -132,7 +127,6 @@ namespace indirimxApi.Controllers
             return products;
         }
 
-        [AllowAnonymous]
         [Route("get_product/{id:int}"), HttpGet]
         public async Task<Products> GetProduct(int id)
         {
@@ -146,26 +140,36 @@ namespace indirimxApi.Controllers
             return product;
         }
 
-        [AllowAnonymous]
+        [Route("get_user_products/{id:int}"), HttpGet]
+        public async Task<ICollection<Products>> GetUserProducts(int id)
+        {
+            var products = dbContext.Products
+                .Include(x => x.image)
+                .Include(x => x.comment)
+                .Where(x => x.deleted != true)
+                .Where(x => x.user.id == id)
+                .Where(x => x.is_active == true).ToList();
+
+            return products;
+        }
+
         [Route("get_comment/{id:int}"), HttpGet]
         public async Task<ICollection<Comments>> GetComment(int id)
         {
             var comments = dbContext.Comments
                 .Where(x => x.deleted != true)
                 .Where(x => x.product_id == id)
-                .ToList();
-
+                .ToList();         
+    
             return comments;
 
         }
 
-        [AllowAnonymous]
         [Route("get_user"), HttpGet]
         public async Task<Users> GetUser(string email)
         {
-            var user = dbContext.CustomUsers
+            var user = dbContext.Users
                 .Where(x => x.deleted != true)
-                .Where(x => x.email == email)
                 .FirstOrDefault();
 
             return user;

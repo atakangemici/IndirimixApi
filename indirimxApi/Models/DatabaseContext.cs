@@ -7,10 +7,11 @@ namespace indirimxApi
     {
 
         public DbSet<Comments> Comments { get; set; }
+        public DbSet<Likes> Likes { get; set; }
         public DbSet<Favorites> Favorites { get; set; }
         public DbSet<Products> Products { get; set; }
-        public DbSet<Users> CustomUsers { get; set; }
-        public DbSet<ProductImages> ProductImages { get; set; }
+        public DbSet<Users> Users { get; set; }
+        public DbSet<Images> Images { get; set; }
 
         public indirimxContext(DbContextOptions<indirimxContext> options)
      : base(options)

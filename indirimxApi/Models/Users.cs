@@ -8,8 +8,8 @@ namespace indirimxApi.Models
 {
     public class Users : BaseEntity
     {
-        public string user_name { get; set; }
-        public string user_sure_name { get; set; }
+        public string name { get; set; }
+        public string sure_name { get; set; }
         public string password { get; set; }
         public string email { get; set; }
         public string image { get; set; }

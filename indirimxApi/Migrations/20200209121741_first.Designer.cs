@@ -10,8 +10,8 @@ using indirimxApi;
 namespace indirimxApi.Migrations
 {
     [DbContext(typeof(indirimxContext))]
-    [Migration("20200131221907_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20200209121741_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -61,7 +61,7 @@ namespace indirimxApi.Migrations
                     b.ToTable("Favorites");
                 });
 
-            modelBuilder.Entity("indirimxApi.Models.ProductImages", b =>
+            modelBuilder.Entity("indirimxApi.Models.Images", b =>
                 {
                     b.Property<int>("id")
                         .ValueGeneratedOnAdd()
@@ -79,7 +79,28 @@ namespace indirimxApi.Migrations
 
                     b.HasKey("id");
 
-                    b.ToTable("ProductImages");
+                    b.ToTable("Images");
+                });
+
+            modelBuilder.Entity("indirimxApi.Models.Likes", b =>
+                {
+                    b.Property<int>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("create_date");
+
+                    b.Property<bool>("deleted");
+
+                    b.Property<string>("like");
+
+                    b.Property<int>("product_id");
+
+                    b.Property<int>("user_id");
+
+                    b.HasKey("id");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("indirimxApi.Models.Products", b =>
@@ -89,6 +110,8 @@ namespace indirimxApi.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int?>("commentid");
+
+                    b.Property<int>("comments_count");
 
                     b.Property<DateTime>("create_date");
 
@@ -100,7 +123,9 @@ namespace indirimxApi.Migrations
 
                     b.Property<bool>("is_active");
 
-                    b.Property<int>("like");
+                    b.Property<int?>("likeid");
+
+                    b.Property<int>("likes_count");
 
                     b.Property<string>("location");
 
@@ -119,6 +144,8 @@ namespace indirimxApi.Migrations
                     b.HasIndex("commentid");
 
                     b.HasIndex("imageid");
+
+                    b.HasIndex("likeid");
 
                     b.HasIndex("userid");
 
@@ -139,17 +166,17 @@ namespace indirimxApi.Migrations
 
                     b.Property<string>("image");
 
+                    b.Property<string>("name");
+
                     b.Property<string>("password");
 
                     b.Property<string>("role");
 
-                    b.Property<string>("user_name");
-
-                    b.Property<string>("user_sure_name");
+                    b.Property<string>("sure_name");
 
                     b.HasKey("id");
 
-                    b.ToTable("CustomUsers");
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("indirimxApi.Models.Favorites", b =>
@@ -165,9 +192,13 @@ namespace indirimxApi.Migrations
                         .WithMany()
                         .HasForeignKey("commentid");
 
-                    b.HasOne("indirimxApi.Models.ProductImages", "image")
+                    b.HasOne("indirimxApi.Models.Images", "image")
                         .WithMany()
                         .HasForeignKey("imageid");
+
+                    b.HasOne("indirimxApi.Models.Likes", "like")
+                        .WithMany()
+                        .HasForeignKey("likeid");
 
                     b.HasOne("indirimxApi.Models.Users", "user")
                         .WithMany()
