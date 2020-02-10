@@ -24,24 +24,24 @@ namespace indirimxApi.Controllers
         }
 
         [Route("add_product"), HttpPost]
-        public async Task<bool> AddProduct(Products Product)
+        public async Task<bool> AddProduct([FromBody]JObject Product)
         {
             if (Product == null)
                 return false;
 
             Products productData = new Products
             {
-                location = Product.location,
-                description = Product.description,
-                store = Product.store,
-                name = Product.name,
-                price = Product.price,
-                likes_count = Product.likes_count,
-                comments_count = Product.comments_count,
-                is_active = Product.is_active,
+                location = (string)Product["location"],
+                description = (string)Product["description"],
+                store = (string)Product["store"],
+                name = (string)Product["name"],
+                price = (int)Product["price"],
+                likes_count = 0,
+                comments_count = 0,
+                is_active = true,
                 create_date = DateTime.Now,
-                order = Product.order,
-                deleted = Product.deleted
+                order = 1,
+                deleted = false,
             };
 
 
@@ -57,7 +57,7 @@ namespace indirimxApi.Controllers
 
             if (obj == null)
                 return false;
-          
+
 
             Comments commentData = new Comments
             {
@@ -74,6 +74,7 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+        [Route("add_favorite"), HttpPost]
         public async Task<bool> AddFavorite(Favorites Favorite)
         {
             if (Favorite == null)
@@ -160,8 +161,8 @@ namespace indirimxApi.Controllers
             var comments = dbContext.Comments
                 .Where(x => x.deleted != true)
                 .Where(x => x.product_id == id)
-                .ToList();         
-    
+                .ToList();
+
             return comments;
 
         }
@@ -174,6 +175,38 @@ namespace indirimxApi.Controllers
                 .FirstOrDefault();
 
             return user;
+        }
+
+        [Route("delete_comment/{id:int}"), HttpGet]
+        public async Task<bool> DeleteComment(int id)
+        {
+            if (id == 0)
+                return false;
+
+            var obj = new Comments();
+            obj.id = id;
+            obj.deleted = true;
+
+            dbContext.Comments.Update(obj);
+            await dbContext.SaveChangesAsync();
+
+            return true;
+        }
+
+        [Route("delete_product/{id:int}"), HttpGet]
+        public async Task<bool> DeleteProduct(int id)
+        {
+            if (id == 0)
+                return false;
+
+            var obj = new Products();
+            obj.id = id;
+            obj.deleted = true;
+
+            dbContext.Products.Update(obj);
+            await dbContext.SaveChangesAsync();
+
+            return true;
         }
     }
 }
