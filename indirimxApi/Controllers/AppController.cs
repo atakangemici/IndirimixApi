@@ -61,8 +61,9 @@ namespace indirimxApi.Controllers
 
             Comments commentData = new Comments
             {
-                comment = "atakan",
+                comment = (string)obj["name"],
                 user_id = 1,
+                product_id = (int)obj["productId"],
                 create_date = DateTime.Now,
                 deleted = false
             };
