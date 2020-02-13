@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace indirimxApi.Migrations
 {
-    public partial class first : Migration
+    public partial class firstMigrtion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

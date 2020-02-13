@@ -8,8 +8,10 @@ namespace indirimxApi.Models
 {
     public class Products : BaseEntity
     {
+        //Likse ve diğer alt tablolalar burada tanımlanıcak.
         public Users user { get; set; }
         public Images image { get; set; }
+        //column name comment_id
         public Comments comment { get; set; }
         public Likes like { get; set; }
         public string name { get; set; }
