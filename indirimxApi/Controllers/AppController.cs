@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace indirimxApi.Controllers
 {
+    [Authorize]
     [Route("api/app")]
     public class AppController : ControllerBase
     {
@@ -30,7 +31,6 @@ namespace indirimxApi.Controllers
             dbContext = context;
             _config = config;
         }
-
 
         [AllowAnonymous]
         [Route("token"), HttpPost]
@@ -150,6 +150,7 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+        [AllowAnonymous]
         [Route("add_user"), HttpPost]
         public async Task<Users> AddUser([FromBody]Users User)
         {
@@ -173,6 +174,7 @@ namespace indirimxApi.Controllers
             return userData;
         }
 
+        [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
         public async Task<ICollection<Products>> GetAllProducts()
         {
@@ -223,16 +225,7 @@ namespace indirimxApi.Controllers
             return comments;
 
         }
-
-        [Route("get_user"), HttpGet]
-        public async Task<Users> GetUser(string email)
-        {
-            var user = dbContext.Users
-                .Where(x => x.deleted != true)
-                .FirstOrDefault();
-
-            return user;
-        }
+     
 
         [Route("delete_comment/{id:int}"), HttpGet]
         public async Task<bool> DeleteComment(int id)
