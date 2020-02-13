@@ -152,18 +152,18 @@ namespace indirimxApi.Controllers
 
         [AllowAnonymous]
         [Route("add_user"), HttpPost]
-        public async Task<Users> AddUser([FromBody]Users User)
+        public async Task<Users> AddUser([FromBody]JObject User)
         {
             if (User == null)
                 return null;
 
             Users userData = new Users
             {
-                name = User.name,
-                email = User.email,
-                image = User.image,
-                role = User.role,
-                sure_name = User.sure_name
+                name = (string)User["name"],
+                email = (string)User["email"],
+                image = (string)User["image"],
+                role = (string)User["role"],
+                sure_name = (string)User["sure_name"],
             };
             userData.deleted = userData.deleted;
             userData.create_date = DateTime.Now;
