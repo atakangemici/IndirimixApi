@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace indirimxApi.Controllers
 {
+    [Authorize]
     [Route("api/app")]
     public class AppController : ControllerBase
     {
@@ -29,18 +30,9 @@ namespace indirimxApi.Controllers
         {
             dbContext = context;
             _config = config;
-        }
+        }       
 
-        [Route("get_user"), HttpGet]
-        public async Task<Users> GetUser(string email)
-        {
-            var user = dbContext.Users
-                .Where(x => x.deleted != true)
-                .FirstOrDefault();
-
-            return user;
-        }
-
+        [AllowAnonymous]
         [Route("token"), HttpPost]
         public IActionResult Post([FromBody]JObject request)
         {
@@ -84,7 +76,7 @@ namespace indirimxApi.Controllers
             //Return token in some way
             //to the clients so that they can use it
             //return it with header would be nice
-            return Ok(new { Token = tokenString });
+            return Ok(new { Token = tokenString , User = user });
         }
 
 
@@ -158,6 +150,7 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+        [AllowAnonymous]
         [Route("add_user"), HttpPost]
         public async Task<Users> AddUser([FromBody]JObject User)
         {
@@ -168,9 +161,10 @@ namespace indirimxApi.Controllers
             {
                 name = (string)User["name"],
                 email = (string)User["email"],
+                password = (string)User["password"],
                 image = (string)User["image"],
                 role = (string)User["role"],
-                sure_name = (string)User["sure_name"],
+                sure_name = (string)User["surename"],
             };
             userData.deleted = userData.deleted;
             userData.create_date = DateTime.Now;
@@ -181,6 +175,7 @@ namespace indirimxApi.Controllers
             return userData;
         }
 
+        [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
         public async Task<ICollection<Products>> GetAllProducts()
         {
@@ -194,6 +189,7 @@ namespace indirimxApi.Controllers
             return products;
         }
 
+        [AllowAnonymous]
         [Route("get_product/{id:int}"), HttpGet]
         public async Task<Products> GetProduct(int id)
         {
