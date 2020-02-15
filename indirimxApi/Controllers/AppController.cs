@@ -31,6 +31,16 @@ namespace indirimxApi.Controllers
             _config = config;
         }
 
+        [Route("get_user"), HttpGet]
+        public async Task<Users> GetUser(string email)
+        {
+            var user = dbContext.Users
+                .Where(x => x.deleted != true)
+                .FirstOrDefault();
+
+            return user;
+        }
+
         [Route("token"), HttpPost]
         public IActionResult Post([FromBody]JObject request)
         {
