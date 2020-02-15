@@ -18,7 +18,6 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace indirimxApi.Controllers
 {
-    [Authorize]
     [Route("api/app")]
     public class AppController : ControllerBase
     {
@@ -32,7 +31,6 @@ namespace indirimxApi.Controllers
             _config = config;
         }
 
-        [AllowAnonymous]
         [Route("token"), HttpPost]
         public IActionResult Post([FromBody]JObject request)
         {
@@ -150,7 +148,6 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        [AllowAnonymous]
         [Route("add_user"), HttpPost]
         public async Task<Users> AddUser([FromBody]JObject User)
         {
@@ -174,7 +171,6 @@ namespace indirimxApi.Controllers
             return userData;
         }
 
-        [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
         public async Task<ICollection<Products>> GetAllProducts()
         {
