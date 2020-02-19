@@ -30,7 +30,7 @@ namespace indirimxApi.Controllers
         {
             dbContext = context;
             _config = config;
-        }       
+        }
 
         [AllowAnonymous]
         [Route("token"), HttpPost]
@@ -76,7 +76,7 @@ namespace indirimxApi.Controllers
             //Return token in some way
             //to the clients so that they can use it
             //return it with header would be nice
-            return Ok(new { Token = tokenString , User = user });
+            return Ok(new { Token = tokenString, User = user });
         }
 
 
@@ -216,8 +216,23 @@ namespace indirimxApi.Controllers
             return products;
         }
 
-        [Route("get_comment/{id:int}"), HttpGet]
-        public async Task<ICollection<Comments>> GetComment(int id)
+        [AllowAnonymous]
+        [Route("get_comments/{id:int}"), HttpGet]
+        public async Task<ICollection<Comments>> GetComments(int id)
+        {
+            var comments = dbContext.Comments
+                .Where(x => x.deleted != true)
+                .Where(x => x.product_id == id)
+                .Take(5)
+                .ToList();
+
+            return comments;
+
+        }
+
+        [AllowAnonymous]
+        [Route("get_all_comments/{id:int}"), HttpGet]
+        public async Task<ICollection<Comments>> GetAllComments(int id)
         {
             var comments = dbContext.Comments
                 .Where(x => x.deleted != true)
@@ -227,7 +242,7 @@ namespace indirimxApi.Controllers
             return comments;
 
         }
-     
+
 
         [Route("delete_comment/{id:int}"), HttpGet]
         public async Task<bool> DeleteComment(int id)
