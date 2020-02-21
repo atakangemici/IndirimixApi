@@ -10,8 +10,8 @@ using indirimxApi;
 namespace indirimxApi.Migrations
 {
     [DbContext(typeof(indirimxContext))]
-    [Migration("20200212121416_firstMigrtion")]
-    partial class firstMigrtion
+    [Migration("20200221210712_firstMigration")]
+    partial class firstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
