@@ -1,6 +1,7 @@
 ﻿using indirimxApi.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,22 +9,44 @@ namespace indirimxApi.Models
 {
     public class Products : BaseEntity
     {
-        //Likse ve diğer alt tablolalar burada tanımlanıcak.
-        public Users user { get; set; }
-        public Images image { get; set; }
-        //column name comment_id
-        public Comments comment { get; set; }
-        public Likes like { get; set; }
-        public string name { get; set; }
-        public double price { get; set; }
-        public string location { get; set; }
-        public string store { get; set; }
-        public int likes_count { get; set; }
-        //public int like_count { get; set; }
-        public int comments_count{ get; set; }
-        public string description { get; set; }
-        public bool is_active { get; set; }
-        public int order { get; set; }
+
+        [Column("name")]
+        public string Name { get; set; }
+
+        [Column("price")]
+        public double Price { get; set; }
+
+        [Column("location")]
+        public string Location { get; set; }
+
+        [Column("store")]
+        public string Store { get; set; }
+
+        [Column("description")]
+        public string Description { get; set; }
+
+        [Column("is_active")]
+        public bool IsActive { get; set; }
+
+        [Column("user_id")]
+        public Users User { get; set; }
+
+        [Column("city")]
+        public string City { get; set; }
+
+        [Column("category")]
+        public string Category { get; set; }
+
+        [Column("gender")]
+        public string Gender { get; set; }
+
+        public virtual ICollection<Images> Images { get; set; }
+
+        public virtual ICollection<Comments> Comments { get; set; }
+
+
+        public virtual ICollection<Favorites> Favorites { get; set; }
+
 
     }
 }

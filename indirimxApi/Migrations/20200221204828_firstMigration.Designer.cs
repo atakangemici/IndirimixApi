@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using indirimxApi;
 
 namespace indirimxApi.Migrations
 {
     [DbContext(typeof(indirimxContext))]
-    partial class indirimxContextModelSnapshot : ModelSnapshot
+    [Migration("20200221204828_firstMigration")]
+    partial class firstMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

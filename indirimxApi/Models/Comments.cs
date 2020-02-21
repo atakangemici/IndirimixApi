@@ -1,6 +1,7 @@
 ﻿using indirimxApi.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -8,9 +9,14 @@ namespace indirimxApi.Models
 {
     public class Comments : BaseEntity
     {
-        public int user_id { get; set; }
-        public string comment { get; set; }
-        public int product_id { get; set; }
+       
+        [Column("comment")]
+        public string Comment { get; set; }
 
+        [Column("product_id")]
+        public Products Product { get; set; }
+
+        [Column("user_id")]
+        public Users User { get; set; }
     }
 }

@@ -7,16 +7,13 @@ using System.Web;
 
 namespace indirimxApi.Models
 {
-    public class Favorites : BaseEntity
-    {   
-        [Column("favorite")]
-        public string Favorite { get; set; }
+    public class Complaints : BaseEntity
+    {
+        [Column("user_id")]
+        public Users User { get; set; }
 
         [Column("product_id")]
         public Products Product { get; set; }
-
-        [Column("user_id")]
-        public Users User { get; set; }
 
     }
 }

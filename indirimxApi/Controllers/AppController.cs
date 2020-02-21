@@ -40,7 +40,7 @@ namespace indirimxApi.Controllers
             string password = request["password"].ToString();
 
             var user = dbContext.Users
-           .Where(x => x.deleted != true && x.email == email && x.password == password)
+           .Where(x => x.Deleted != true && x.Email == email && x.Password == password)
            .FirstOrDefault();
 
             if (user == null)
@@ -58,7 +58,7 @@ namespace indirimxApi.Controllers
                 Subject = new ClaimsIdentity(new Claim[]
                 {
                    //Add any claim
-                    new Claim(ClaimTypes.Name, user.name)
+                    new Claim(ClaimTypes.Name, user.Name)
                 }),
 
                 //Expire token after some time
@@ -79,7 +79,7 @@ namespace indirimxApi.Controllers
             return Ok(new { Token = tokenString, User = user });
         }
 
-
+        [AllowAnonymous]
         [Route("add_product"), HttpPost]
         public async Task<bool> AddProduct([FromBody]JObject Product)
         {
@@ -88,17 +88,15 @@ namespace indirimxApi.Controllers
 
             Products productData = new Products
             {
-                location = (string)Product["location"],
-                description = (string)Product["description"],
-                store = (string)Product["store"],
-                name = (string)Product["name"],
-                price = (int)Product["price"],
-                likes_count = 0,
-                comments_count = 0,
-                is_active = true,
-                create_date = DateTime.Now,
-                order = 1,
-                deleted = false,
+                Location = (string)Product["location"],
+                Description = (string)Product["description"],
+                Store = (string)Product["store"],
+                Name = (string)Product["name"],
+                Price = (int)Product["price"],
+                IsActive = true,
+                CreatedAt = DateTime.Now,
+                Order = 1,
+                Deleted = false,
             };
 
 
@@ -108,29 +106,31 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        [Route("add_comments"), HttpPost]
-        public async Task<bool> AddComment([FromBody]JObject obj)
-        {
+        //[AllowAnonymous]
+        //[Route("add_comments"), HttpPost]
+        //public async Task<bool> AddComment([FromBody]JObject obj)
+        //{
 
-            if (obj == null)
-                return false;
+        //    if (obj == null)
+        //        return false;
 
 
-            Comments commentData = new Comments
-            {
-                comment = (string)obj["name"],
-                user_id = 1,
-                product_id = (int)obj["productId"],
-                create_date = DateTime.Now,
-                deleted = false
-            };
+        //    Comments commentData = new Comments
+        //    {
+        //        Comment = (string)obj["name"],
+        //        User = 1,
+        //        ProductId = (int)obj["productId"],
+        //        CreatedAt = DateTime.Now,
+        //        Deleted = false
+        //    };
 
-            dbContext.Comments.Add(commentData);
-            await dbContext.SaveChangesAsync();
+        //    dbContext.Comments.Add(commentData);
+        //    await dbContext.SaveChangesAsync();
 
-            return true;
-        }
+        //    return true;
+        //}
 
+        [AllowAnonymous]
         [Route("add_favorite"), HttpPost]
         public async Task<bool> AddFavorite(Favorites Favorite)
         {
@@ -139,9 +139,9 @@ namespace indirimxApi.Controllers
 
             Favorites favoritesData = new Favorites
             {
-                product = Favorite.product,
-                create_date = DateTime.Now,
-                deleted = Favorite.deleted
+                Product = Favorite.Product,
+                CreatedAt = DateTime.Now,
+                Deleted = Favorite.Deleted
             };
 
             dbContext.Favorites.Add(favoritesData);
@@ -159,15 +159,15 @@ namespace indirimxApi.Controllers
 
             Users userData = new Users
             {
-                name = (string)User["name"],
-                email = (string)User["email"],
-                password = (string)User["password"],
-                image = (string)User["image"],
-                role = (string)User["role"],
-                sure_name = (string)User["surename"],
+                Name = (string)User["name"],
+                Email = (string)User["email"],
+                Password = (string)User["password"],
+                Image = (string)User["image"],
+                Role = (string)User["role"],
+                SureName = (string)User["surename"],
             };
-            userData.deleted = userData.deleted;
-            userData.create_date = DateTime.Now;
+            userData.Deleted = userData.Deleted;
+            userData.CreatedAt = DateTime.Now;
 
             dbContext.Users.Add(userData);
             await dbContext.SaveChangesAsync();
@@ -177,14 +177,15 @@ namespace indirimxApi.Controllers
 
         [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
-        public async Task<ICollection<Products>> GetAllProducts()
+        public async Task<Products> GetAllProducts()
         {
 
             var products = dbContext.Products
-            .Include(x => x.image)
-            .Include(x => x.comment)
-            .Where(x => x.deleted != true)
-            .Where(x => x.is_active == true).ToList();
+            .Include(x => x.Images)
+            .Include(x => x.Comments)
+            .Include(x => x.Favorites)
+            .Where(x => x.Deleted != true)
+            .Where(x => x.IsActive == true).FirstOrDefault();
 
             return products;
         }
@@ -194,56 +195,57 @@ namespace indirimxApi.Controllers
         public async Task<Products> GetProduct(int id)
         {
             var product = dbContext.Products
-                .Include(x => x.image)
-                .Include(x => x.comment)
-                .Where(x => x.deleted != true)
-                .Where(x => x.id == id)
-                .Where(x => x.is_active == true).FirstOrDefault();
+                .Include(x => x.Images)
+                .Include(x => x.Comments)
+                .Where(x => x.Deleted != true)
+                .Where(x => x.User.Id == id)
+                .Where(x => x.IsActive == true).FirstOrDefault();
 
             return product;
         }
 
+        [AllowAnonymous]
         [Route("get_user_products/{id:int}"), HttpGet]
         public async Task<ICollection<Products>> GetUserProducts(int id)
         {
             var products = dbContext.Products
-                .Include(x => x.image)
-                .Include(x => x.comment)
-                .Where(x => x.deleted != true)
-                .Where(x => x.user.id == id)
-                .Where(x => x.is_active == true).ToList();
+                .Include(x => x.Images)
+                .Include(x => x.Comments)
+                .Where(x => x.Deleted != true)
+                .Where(x => x.User.Id == id)
+                .Where(x => x.IsActive == true).ToList();
 
             return products;
         }
 
+        //[AllowAnonymous]
+        //[Route("get_comments/{id:int}"), HttpGet]
+        //public async Task<ICollection<Comments>> GetComments(int id)
+        //{
+        //    var comments = dbContext.Comments
+        //        .Where(x => x.Deleted != true)
+        //        .Where(x => x.ProductId == id)
+        //        .Take(5)
+        //        .ToList();
+
+        //    return comments;
+
+        //}
+
+        //[AllowAnonymous]
+        //[Route("get_all_comments/{id:int}"), HttpGet]
+        //public async Task<ICollection<Comments>> GetAllComments(int id)
+        //{
+        //    var comments = dbContext.Comments
+        //        .Where(x => x.Deleted != true)
+        //        .Where(x => x.ProductId == id)
+        //        .ToList();
+
+        //    return comments;
+
+        //}
+
         [AllowAnonymous]
-        [Route("get_comments/{id:int}"), HttpGet]
-        public async Task<ICollection<Comments>> GetComments(int id)
-        {
-            var comments = dbContext.Comments
-                .Where(x => x.deleted != true)
-                .Where(x => x.product_id == id)
-                .Take(5)
-                .ToList();
-
-            return comments;
-
-        }
-
-        [AllowAnonymous]
-        [Route("get_all_comments/{id:int}"), HttpGet]
-        public async Task<ICollection<Comments>> GetAllComments(int id)
-        {
-            var comments = dbContext.Comments
-                .Where(x => x.deleted != true)
-                .Where(x => x.product_id == id)
-                .ToList();
-
-            return comments;
-
-        }
-
-
         [Route("delete_comment/{id:int}"), HttpGet]
         public async Task<bool> DeleteComment(int id)
         {
@@ -251,8 +253,8 @@ namespace indirimxApi.Controllers
                 return false;
 
             var obj = new Comments();
-            obj.id = id;
-            obj.deleted = true;
+            obj.Id = id;
+            obj.Deleted = true;
 
             dbContext.Comments.Update(obj);
             await dbContext.SaveChangesAsync();
@@ -260,6 +262,7 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+        [AllowAnonymous]
         [Route("delete_product/{id:int}"), HttpGet]
         public async Task<bool> DeleteProduct(int id)
         {
@@ -267,8 +270,8 @@ namespace indirimxApi.Controllers
                 return false;
 
             var obj = new Products();
-            obj.id = id;
-            obj.deleted = true;
+            obj.Id = id;
+            obj.Deleted = true;
 
             dbContext.Products.Update(obj);
             await dbContext.SaveChangesAsync();
