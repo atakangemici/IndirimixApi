@@ -32,8 +32,6 @@ namespace indirimxApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-
             var key = Encoding.ASCII.GetBytes(Configuration["Application:Secret"]);
             services.AddAuthentication(x =>
             {
@@ -42,10 +40,10 @@ namespace indirimxApi
             })
             .AddJwtBearer(x =>
             {
-                x.Audience = "indirimxApp";
+                x.Audience = "indirimxmobile.azurewebsites.net";
                 x.RequireHttpsMetadata = false;
                 x.SaveToken = true;
-                x.ClaimsIssuer = "indirimx.api.demo";
+                x.ClaimsIssuer = "indirimxmobile.azurewebsites.net";
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(key),
