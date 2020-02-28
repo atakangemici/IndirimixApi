@@ -88,18 +88,18 @@ namespace indirimxApi.Controllers
             if (Product == null)
                 return false;
 
-            var imageData = (Product["image"] == null ? null : Product["image"].ToObject<byte[]>());
+            //var imageData = (Product["image"] == null ? null : Product["image"].ToObject<byte[]>());
 
-            var imageUrl = this.UploadFileToBlob((string)Product["name"], imageData, "image/jpeg");
+            //var imageUrl = this.UploadFileToBlob((string)Product["name"], imageData, "image/jpeg");
 
-            Images imageCreate = new Images
-            {
-                image = imageUrl,
-                is_active = true,
-                create_date = DateTime.Now,
-                order = 1,
-                deleted = false,
-            };
+            //Images imageCreate = new Images
+            //{
+            //    image = imageUrl,
+            //    is_active = true,
+            //    create_date = DateTime.Now,
+            //    order = 1,
+            //    deleted = false,
+            //};
 
             Products productData = new Products
             {
@@ -116,7 +116,7 @@ namespace indirimxApi.Controllers
                 deleted = false,
             };
 
-            dbContext.Images.Add(imageCreate);
+            //dbContext.Images.Add(imageCreate);
             dbContext.Products.Add(productData);
             await dbContext.SaveChangesAsync();
 
@@ -311,7 +311,8 @@ namespace indirimxApi.Controllers
         {
             try
             {
-                CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(_config.GetConnectionString("AccessKey"));
+                var accessKey = _config.GetSection("AccessKey").Value;
+                CloudStorageAccount cloudStorageAccount = CloudStorageAccount.Parse(accessKey);
                 CloudBlobClient cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
                 string strContainerName = "uploads";
                 CloudBlobContainer cloudBlobContainer = cloudBlobClient.GetContainerReference(strContainerName);
