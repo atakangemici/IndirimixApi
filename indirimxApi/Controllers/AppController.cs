@@ -150,6 +150,8 @@ namespace indirimxApi.Controllers
             return true;
         }
 
+
+
         [AllowAnonymous]
         [Route("add_user"), HttpPost]
         public async Task<Users> AddUser([FromBody]JObject User)
@@ -213,6 +215,7 @@ namespace indirimxApi.Controllers
             var products = dbContext.Products
                 .Include(x => x.Images)
                 .Include(x => x.Comments)
+                .Include(x => x.Favorites)
                 .Where(x => x.Deleted != true)
                 .Where(x => x.UserId == id)
                 .Where(x => x.IsActive == true).ToList();
@@ -231,6 +234,20 @@ namespace indirimxApi.Controllers
                 .ToList();
 
             return comments;
+
+        }
+
+        [AllowAnonymous]
+        [Route("get_favorites/{id:int}"), HttpGet]
+        public async Task<ActionResult<Favorites>> GetFavorites(int id)
+        {
+            var favorites = dbContext.Comments
+                .Where(x => x.Deleted != true)
+                .Where(x => x.UserId == id)
+                .Include(x => x.Product)
+                .ToList();
+
+            return Ok(favorites);
 
         }
 
