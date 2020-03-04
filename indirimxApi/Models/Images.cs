@@ -14,7 +14,10 @@ namespace indirimxApi.Models
         public string Image { get; set; }
 
         [Column("product_id")]
-        public Products Product { get; set; }     
+        public int ProductId { get; set; }
+
+        public virtual Products Product { get; set; }
+        
 
     }
 }

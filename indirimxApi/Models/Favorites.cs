@@ -9,14 +9,14 @@ namespace indirimxApi.Models
 {
     public class Favorites : BaseEntity
     {   
-        [Column("favorite")]
-        public string Favorite { get; set; }
-
+       
         [Column("product_id")]
-        public Products Product { get; set; }
+        public int ProductId { get; set; }
 
         [Column("user_id")]
-        public Users User { get; set; }
+        public int UserId { get; set; }
+
+        public virtual Products Product { get; set; }
 
     }
 }

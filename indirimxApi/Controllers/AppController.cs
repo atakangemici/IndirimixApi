@@ -106,29 +106,29 @@ namespace indirimxApi.Controllers
             return true;
         }
 
-        //[AllowAnonymous]
-        //[Route("add_comments"), HttpPost]
-        //public async Task<bool> AddComment([FromBody]JObject obj)
-        //{
+        [AllowAnonymous]
+        [Route("add_comments"), HttpPost]
+        public async Task<bool> AddComment([FromBody]JObject obj)
+        {
 
-        //    if (obj == null)
-        //        return false;
+            if (obj == null)
+                return false;
 
 
-        //    Comments commentData = new Comments
-        //    {
-        //        Comment = (string)obj["name"],
-        //        User = 1,
-        //        ProductId = (int)obj["productId"],
-        //        CreatedAt = DateTime.Now,
-        //        Deleted = false
-        //    };
+            Comments commentData = new Comments
+            {
+                Comment = (string)obj["name"],
+                UserId = 1,
+                ProductId = (int)obj["productId"],
+                CreatedAt = DateTime.Now,
+                Deleted = false
+            };
 
-        //    dbContext.Comments.Add(commentData);
-        //    await dbContext.SaveChangesAsync();
+            dbContext.Comments.Add(commentData);
+            await dbContext.SaveChangesAsync();
 
-        //    return true;
-        //}
+            return true;
+        }
 
         [AllowAnonymous]
         [Route("add_favorite"), HttpPost]
@@ -177,17 +177,18 @@ namespace indirimxApi.Controllers
 
         [AllowAnonymous]
         [Route("get_all_products"), HttpGet]
-        public async Task<Products> GetAllProducts()
+        public async Task<ActionResult<Products>> GetAllProducts()
         {
 
             var products = dbContext.Products
-            .Include(x => x.Images)
-            .Include(x => x.Comments)
             .Include(x => x.Favorites)
+            .Include(x => x.Comments)
+            .Include(x => x.Images)
             .Where(x => x.Deleted != true)
-            .Where(x => x.IsActive == true).FirstOrDefault();
+            .Where(x => x.IsActive == true).ToList();
 
-            return products;
+
+            return Ok(products);
         }
 
         [AllowAnonymous]
@@ -195,10 +196,11 @@ namespace indirimxApi.Controllers
         public async Task<Products> GetProduct(int id)
         {
             var product = dbContext.Products
-                .Include(x => x.Images)
+                .Include(x => x.Favorites)
                 .Include(x => x.Comments)
+                .Include(x => x.Images)
                 .Where(x => x.Deleted != true)
-                .Where(x => x.User.Id == id)
+                .Where(x => x.UserId == id)
                 .Where(x => x.IsActive == true).FirstOrDefault();
 
             return product;
@@ -212,38 +214,38 @@ namespace indirimxApi.Controllers
                 .Include(x => x.Images)
                 .Include(x => x.Comments)
                 .Where(x => x.Deleted != true)
-                .Where(x => x.User.Id == id)
+                .Where(x => x.UserId == id)
                 .Where(x => x.IsActive == true).ToList();
 
             return products;
         }
 
-        //[AllowAnonymous]
-        //[Route("get_comments/{id:int}"), HttpGet]
-        //public async Task<ICollection<Comments>> GetComments(int id)
-        //{
-        //    var comments = dbContext.Comments
-        //        .Where(x => x.Deleted != true)
-        //        .Where(x => x.ProductId == id)
-        //        .Take(5)
-        //        .ToList();
+        [AllowAnonymous]
+        [Route("get_comments/{id:int}"), HttpGet]
+        public async Task<ICollection<Comments>> GetComments(int id)
+        {
+            var comments = dbContext.Comments
+                .Where(x => x.Deleted != true)
+                .Where(x => x.ProductId == id)
+                .Take(5)
+                .ToList();
 
-        //    return comments;
+            return comments;
 
-        //}
+        }
 
-        //[AllowAnonymous]
-        //[Route("get_all_comments/{id:int}"), HttpGet]
-        //public async Task<ICollection<Comments>> GetAllComments(int id)
-        //{
-        //    var comments = dbContext.Comments
-        //        .Where(x => x.Deleted != true)
-        //        .Where(x => x.ProductId == id)
-        //        .ToList();
+        [AllowAnonymous]
+        [Route("get_all_comments/{id:int}"), HttpGet]
+        public async Task<ICollection<Comments>> GetAllComments(int id)
+        {
+            var comments = dbContext.Comments
+                .Where(x => x.Deleted != true)
+                .Where(x => x.ProductId == id)
+                .ToList();
 
-        //    return comments;
+            return comments;
 
-        //}
+        }
 
         [AllowAnonymous]
         [Route("delete_comment/{id:int}"), HttpGet]

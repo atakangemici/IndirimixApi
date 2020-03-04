@@ -4,10 +4,38 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace indirimxApi.Migrations
 {
-    public partial class firstMigration : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    created_by = table.Column<int>(nullable: true),
+                    updated_by = table.Column<int>(nullable: true),
+                    created_at = table.Column<DateTime>(nullable: false),
+                    updated_at = table.Column<DateTime>(nullable: true),
+                    deleted = table.Column<bool>(nullable: false),
+                    order = table.Column<int>(nullable: true),
+                    name = table.Column<string>(nullable: true),
+                    price = table.Column<double>(nullable: false),
+                    location = table.Column<string>(nullable: true),
+                    store = table.Column<string>(nullable: true),
+                    description = table.Column<string>(nullable: true),
+                    is_active = table.Column<bool>(nullable: false),
+                    user_id = table.Column<int>(nullable: false),
+                    city = table.Column<string>(nullable: true),
+                    category = table.Column<string>(nullable: true),
+                    gender = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
@@ -33,40 +61,6 @@ namespace indirimxApi.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Products",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    created_by = table.Column<int>(nullable: true),
-                    updated_by = table.Column<int>(nullable: true),
-                    created_at = table.Column<DateTime>(nullable: false),
-                    updated_at = table.Column<DateTime>(nullable: true),
-                    deleted = table.Column<bool>(nullable: false),
-                    order = table.Column<int>(nullable: true),
-                    name = table.Column<string>(nullable: true),
-                    price = table.Column<double>(nullable: false),
-                    location = table.Column<string>(nullable: true),
-                    store = table.Column<string>(nullable: true),
-                    description = table.Column<string>(nullable: true),
-                    is_active = table.Column<bool>(nullable: false),
-                    UserId = table.Column<int>(nullable: true),
-                    city = table.Column<string>(nullable: true),
-                    category = table.Column<string>(nullable: true),
-                    gender = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Products", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Products_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -79,24 +73,70 @@ namespace indirimxApi.Migrations
                     deleted = table.Column<bool>(nullable: false),
                     order = table.Column<int>(nullable: true),
                     comment = table.Column<string>(nullable: true),
-                    ProductId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
+                    product_id = table.Column<int>(nullable: false),
+                    user_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Comments_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_Comments_Products_product_id",
+                        column: x => x.product_id,
                         principalTable: "Products",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Favorites",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    created_by = table.Column<int>(nullable: true),
+                    updated_by = table.Column<int>(nullable: true),
+                    created_at = table.Column<DateTime>(nullable: false),
+                    updated_at = table.Column<DateTime>(nullable: true),
+                    deleted = table.Column<bool>(nullable: false),
+                    order = table.Column<int>(nullable: true),
+                    product_id = table.Column<int>(nullable: false),
+                    user_id = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Favorites", x => x.id);
                     table.ForeignKey(
-                        name: "FK_Comments_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
+                        name: "FK_Favorites_Products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "Products",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Images",
+                columns: table => new
+                {
+                    id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    created_by = table.Column<int>(nullable: true),
+                    updated_by = table.Column<int>(nullable: true),
+                    created_at = table.Column<DateTime>(nullable: false),
+                    updated_at = table.Column<DateTime>(nullable: true),
+                    deleted = table.Column<bool>(nullable: false),
+                    order = table.Column<int>(nullable: true),
+                    image = table.Column<string>(nullable: true),
+                    product_id = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Images", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_Images_Products_product_id",
+                        column: x => x.product_id,
+                        principalTable: "Products",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -131,74 +171,10 @@ namespace indirimxApi.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Favorites",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    created_by = table.Column<int>(nullable: true),
-                    updated_by = table.Column<int>(nullable: true),
-                    created_at = table.Column<DateTime>(nullable: false),
-                    updated_at = table.Column<DateTime>(nullable: true),
-                    deleted = table.Column<bool>(nullable: false),
-                    order = table.Column<int>(nullable: true),
-                    favorite = table.Column<string>(nullable: true),
-                    ProductId = table.Column<int>(nullable: true),
-                    UserId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Favorites", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Favorites_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Favorites_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Images",
-                columns: table => new
-                {
-                    id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    created_by = table.Column<int>(nullable: true),
-                    updated_by = table.Column<int>(nullable: true),
-                    created_at = table.Column<DateTime>(nullable: false),
-                    updated_at = table.Column<DateTime>(nullable: true),
-                    deleted = table.Column<bool>(nullable: false),
-                    order = table.Column<int>(nullable: true),
-                    image = table.Column<string>(nullable: true),
-                    ProductId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Images", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_Images_Products_ProductId",
-                        column: x => x.ProductId,
-                        principalTable: "Products",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ProductId",
+                name: "IX_Comments_product_id",
                 table: "Comments",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId",
-                table: "Comments",
-                column: "UserId");
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Complaints_ProductId",
@@ -211,24 +187,14 @@ namespace indirimxApi.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favorites_ProductId",
+                name: "IX_Favorites_product_id",
                 table: "Favorites",
-                column: "ProductId");
+                column: "product_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Favorites_UserId",
-                table: "Favorites",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Images_ProductId",
+                name: "IX_Images_product_id",
                 table: "Images",
-                column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_UserId",
-                table: "Products",
-                column: "UserId");
+                column: "product_id");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -246,10 +212,10 @@ namespace indirimxApi.Migrations
                 name: "Images");
 
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "Users");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Products");
         }
     }
 }

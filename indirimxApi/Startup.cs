@@ -8,10 +8,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace indirimxApi
 {
@@ -41,7 +44,21 @@ namespace indirimxApi
                     });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+             .AddJsonOptions(opt =>
+              {
+                  opt.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                  opt.SerializerSettings.PreserveReferencesHandling = PreserveReferencesHandling.None;
+                  opt.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                  opt.SerializerSettings.DateParseHandling = DateParseHandling.None;
+                  opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
+
+                  opt.SerializerSettings.ContractResolver = new DefaultContractResolver
+                  {
+                      NamingStrategy = new SnakeCaseNamingStrategy(),
+                  };                 
+              });
+
             services.AddDbContext<indirimxContext>(options =>
        options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
         }

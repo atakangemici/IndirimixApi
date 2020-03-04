@@ -10,8 +10,8 @@ using indirimxApi;
 namespace indirimxApi.Migrations
 {
     [DbContext(typeof(indirimxContext))]
-    [Migration("20200221204828_firstMigration")]
-    partial class firstMigration
+    [Migration("20200304183910_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,7 +43,8 @@ namespace indirimxApi.Migrations
                     b.Property<int?>("Order")
                         .HasColumnName("order");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int>("ProductId")
+                        .HasColumnName("product_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnName("updated_at");
@@ -51,13 +52,12 @@ namespace indirimxApi.Migrations
                     b.Property<int?>("UpdatedById")
                         .HasColumnName("updated_by");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Comments");
                 });
@@ -116,13 +116,11 @@ namespace indirimxApi.Migrations
                     b.Property<bool>("Deleted")
                         .HasColumnName("deleted");
 
-                    b.Property<string>("Favorite")
-                        .HasColumnName("favorite");
-
                     b.Property<int?>("Order")
                         .HasColumnName("order");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int>("ProductId")
+                        .HasColumnName("product_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnName("updated_at");
@@ -130,13 +128,12 @@ namespace indirimxApi.Migrations
                     b.Property<int?>("UpdatedById")
                         .HasColumnName("updated_by");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Favorites");
                 });
@@ -163,7 +160,8 @@ namespace indirimxApi.Migrations
                     b.Property<int?>("Order")
                         .HasColumnName("order");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<int>("ProductId")
+                        .HasColumnName("product_id");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnName("updated_at");
@@ -230,11 +228,10 @@ namespace indirimxApi.Migrations
                     b.Property<int?>("UpdatedById")
                         .HasColumnName("updated_by");
 
-                    b.Property<int?>("UserId");
+                    b.Property<int>("UserId")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Products");
                 });
@@ -291,11 +288,8 @@ namespace indirimxApi.Migrations
                 {
                     b.HasOne("indirimxApi.Models.Products", "Product")
                         .WithMany("Comments")
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("indirimxApi.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("indirimxApi.Models.Complaints", b =>
@@ -313,25 +307,16 @@ namespace indirimxApi.Migrations
                 {
                     b.HasOne("indirimxApi.Models.Products", "Product")
                         .WithMany("Favorites")
-                        .HasForeignKey("ProductId");
-
-                    b.HasOne("indirimxApi.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("indirimxApi.Models.Images", b =>
                 {
                     b.HasOne("indirimxApi.Models.Products", "Product")
                         .WithMany("Images")
-                        .HasForeignKey("ProductId");
-                });
-
-            modelBuilder.Entity("indirimxApi.Models.Products", b =>
-                {
-                    b.HasOne("indirimxApi.Models.Users", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

@@ -26,6 +26,6 @@ namespace indirimxApi.Models
 
         [Column("role")]
         public string Role { get; set; }
-     
+
     }
 }
